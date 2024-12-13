@@ -2,6 +2,7 @@
 #include<iostream>
 using  std::cout;
 using  std::endl;
+using std::cin;
 template<typename T>
 struct Node
 {
@@ -84,11 +85,27 @@ inline void List<T>::removeHead()
 template<typename T>
 inline void List<T>::removeTail()
 {
+	if (isEmpty())
+		return;
+	auto tmp = tail; // запамятали старий head
+	tail = tail->prev; // змістили head на наступний вузол
+	delete tmp; // вилучили старий head
+	if (isEmpty())
+		head = nullptr;
+	else
+		tail->next = nullptr;
+	--size;
 }
+
 
 template<typename T>
 inline void List<T>::print() const
 {
+	if (isEmpty())
+	{
+		cout << "No list found. Please create it " << endl;
+		return;
+	}
 	auto tmp = head;
 	cout << "List in direct :\t";
 	while (tmp != nullptr)
@@ -102,6 +119,11 @@ inline void List<T>::print() const
 template<typename T>
 inline void List<T>::printR() const
 {
+	if (isEmpty())
+	{
+		cout << "No list found. Please create it " << endl;
+		return;
+	}
 	auto tmp = tail;
 	cout << "List in reverse :\t";
 	while (tmp != nullptr)
@@ -170,8 +192,9 @@ template<typename T>
 inline T& List<T>::operator()(const T& data)
 {
 	auto find = findNode(data);
+	if (find == nullptr)
+		throw std::exception("element not found");
 	return find->data;
-	// TODO: insert return statement here
 }
 
 template<typename T>
